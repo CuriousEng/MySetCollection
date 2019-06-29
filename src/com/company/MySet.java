@@ -1,5 +1,8 @@
 package com.company;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.*;
 
@@ -62,13 +65,26 @@ public class MySet<E> extends AbstractSet<E> implements Serializable, Cloneable,
         }
     }
 
-    public static void main(String[] args) {
-        //проверим клонирование
-        /*MySet<String> oldSet = new MySet<>();
-        oldSet.add("привет!");
-        oldSet.add("Проверка клонирования!");
-        MySet<String> newSet = (MySet<String>) oldSet.clone();
-        System.out.println(newSet.contains("привет!"));
-        System.out.println(newSet.contains("Проверка клонирования!"));*/
+    private void writeObject (ObjectOutputStream out) throws IOException {
+        out.defaultWriteObject();
+        out.writeInt(HashMapReflectionHelper.callHiddenMethod(map, "capacity"));
+        out.writeFloat(HashMapReflectionHelper.callHiddenMethod(map, "loadFactor"));
+        out.writeInt(map.size());
+        for (E e : map.keySet()) {
+            out.writeObject(e);
+        }
+    }
+
+    private void readObject (ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        int capacity = in.readInt();
+        float loadFactor = in.readFloat();
+        int size = in.readInt();
+
+        map = new HashMap<>(capacity, loadFactor);
+
+        for (int i = 0; i < size; i++) {
+            map.put((E) in.readObject(), PRESENT);
+        }
     }
 }
