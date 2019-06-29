@@ -50,4 +50,25 @@ public class MySet<E> extends AbstractSet<E> implements Serializable, Cloneable,
     public boolean contains(Object key) {
         return map.containsKey(key);
     }
+
+    @Override
+    public Object clone() {
+        try {
+            MySet<E> set = new MySet<>();
+            set.map = (HashMap<E, Object>) map.clone();
+            return set;
+        } catch (Exception e){
+            throw new InternalError(e);
+        }
+    }
+
+    public static void main(String[] args) {
+        //проверим клонирование
+        /*MySet<String> oldSet = new MySet<>();
+        oldSet.add("привет!");
+        oldSet.add("Проверка клонирования!");
+        MySet<String> newSet = (MySet<String>) oldSet.clone();
+        System.out.println(newSet.contains("привет!"));
+        System.out.println(newSet.contains("Проверка клонирования!"));*/
+    }
 }
