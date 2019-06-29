@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.*;
 
 public class MySet<E> extends AbstractSet<E> implements Serializable, Cloneable, Set<E> {
-    private static final Object PRESENT = new Object();
+    private static final Object PRESENT = new Object(); //заглушка
     private transient HashMap<E,Object> map;
 
     public MySet() {
@@ -23,11 +23,31 @@ public class MySet<E> extends AbstractSet<E> implements Serializable, Cloneable,
 
     @Override
     public Iterator iterator() {
-        return null;
+        return map.keySet().iterator();
     }
 
     @Override
     public int size() {
-        return 0;
+        return map.size();
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return map.isEmpty();
+    }
+
+    @Override
+    public void clear() {
+        map.clear();
+    }
+
+    @Override
+    public boolean remove(Object value) {
+        return map.remove(value) == null;
+    }
+
+    @Override
+    public boolean contains(Object key) {
+        return map.containsKey(key);
     }
 }
